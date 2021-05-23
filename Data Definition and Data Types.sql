@@ -21,6 +21,12 @@ INSERT INTO `employees` (`first_name`, `last_name`) VALUES ('Test3', 'Tets3');
  ADD COLUMN `middle_name` VARCHAR(50) NOT NULL;
  /* altering tables */
  
+ ALTER TABLE `products`
+ ADD CONSTRAINT fk_products_categories
+ FOREIGN KEY (`category_id`)
+ REFERENCES `categories`(`id`);
+ /* adding constraints */
+ 
  ALTER TABLE `employees`
 MODIFY COLUMN `middle_name` 
 VARCHAR(100);
