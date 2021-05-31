@@ -4106,3 +4106,41 @@ INSERT INTO `user_game_items` (`item_id`, `user_game_id`) VALUES
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+
+-- games from 2011 and 2012 year 
+SELECT `name`,
+DATE_FORMAT(`start`, '%Y-%m-%d') 
+AS `start`
+FROM `games`
+WHERE YEAR(`start`) BETWEEN 2011 AND 2012 
+ORDER BY `start`, `name`
+LIMIT 50;
+
+-- user email providers
+SELECT `user_name`, 
+SUBSTRING(`email`, LOCATE('@', `email`) + 1) AS `Email Provider` 
+FROM `users`
+ORDER BY `Email Provider`, user_name;
+
+ -- get users with ip addresses like pattern
+SELECT `user_name`, `ip_address` FROM `users`
+WHERE `ip_address` REGEXP('[0-9]{3}.1[0-9]{2}.[0-9]{2,3}.[0-9]{3}')
+ORDER BY `user_name`;
+
+-- show all games with duration and part of the day
+ SELECT `name`, 
+ (CASE 
+ WHEN HOUR(`start`) BETWEEN 0 AND 11 THEN 'Morning'
+ WHEN HOUR(`start`) BETWEEN 12 AND 17 THEN 'Afternoon'
+ ELSE 'Evening'
+ END)
+ AS `Part of the Day`,
+ (CASE
+ WHEN `duration` <= 3 THEN 'Extra Short'
+ WHEN `duration` BETWEEN 3 AND 6 THEN 'Short'
+ WHEN `duration` BETWEEN 6 AND 10 THEN 'Long'
+ ELSE 'Extra Long'
+ END) AS `Duration`
+ FROM `games`;
+ 
+
