@@ -1663,3 +1663,75 @@ INSERT INTO `towns` (`town_id`, `name`) VALUES
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+
+SELECT * FROM `employees`;
+
+-- employees minimum salaries
+SELECT `department_id`,
+MIN(`salary`) AS `minimum_salary`
+FROM `employees`
+WHERE `department_id` IN (2, 5, 7)
+AND `hire_date` > '2000-01-01'
+GROUP BY `department_id`
+ORDER BY `department_id` ASC;
+
+-- employees average salaries
+CREATE TABLE `high_paid_employees`
+AS SELECT * FROM `employees`
+WHERE `salary` > 30000;
+
+DELETE FROM `high_paid_employees`
+WHERE `manager_id` = 42;
+
+UPDATE `high_paid_employees`
+SET `salary` = `salary` + 5000
+WHERE `department_id` = 1;
+
+SELECT `department_id`, 
+AVG(`salary`) AS `avg_salary`
+FROM `high_paid_employees`
+GROUP BY `department_id`
+ORDER BY `department_id`;
+
+-- employees maximum salaries
+SELECT `department_id`, 
+MAX(`salary`) AS `max_salary`
+FROM `employees`
+GROUP BY `department_id`
+HAVING `max_salary` NOT BETWEEN 30000 AND 70000
+ORDER BY `department_id` ASC;
+
+-- employees count salaries
+SELECT COUNT(`salary`) AS `count`
+FROM `employees`
+WHERE `manager_id` IS NULL; 
+
+-- 3rd highest salary
+ SELECT e.`department_id`,
+ (SELECT DISTINCT e2.`salary`
+ FROM `employees` AS e2
+ WHERE e2.`department_id` = e.`department_id`
+ ORDER BY e2.`salary` DESC
+ LIMIT 2, 1) AS 'third_highest_salary'
+ FROM `employees` AS e
+ GROUP BY e.`department_id`
+ HAVING `third_highest_salary` IS NOT NULL
+ ORDER BY `department_id` ASC;
+ 
+ -- salary challenge
+ SELECT e.`first_name`, e.`last_name`, e.`department_id`
+ FROM `employees` AS e
+ WHERE `salary` > (SELECT AVG(e2.`salary`) AS 'avg'
+	FROM `employees` AS e2
+    WHERE e2.`department_id` = e.`department_id`
+    GROUP BY e2.`department_id`)
+ORDER BY `department_id`, `employee_id`
+LIMIT 10;    
+
+-- departments total salaries
+SELECT `department_id`,
+SUM(`salary`) AS `total_salary`
+FROM `employees`
+GROUP BY `department_id`
+ORDER BY `department_id`;
+
