@@ -94,4 +94,70 @@ VALUES (1, 101),
 (2, 102),
 (2, 103);
 
+-- self-referencing 
+CREATE TABLE `teachers` 
+(`teacher_id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+`name` VARCHAR(30),
+`manager_id` INT);
+
+INSERT INTO `teachers`
+VALUES (101, 'John', NULL),
+(102, 'Maya', 106),
+(103, 'Silvia', 106),
+(104, 'Ted', 105),
+(105, 'Mark', 101),
+(106, 'Greta', 101);
+
+ALTER TABLE `teachers`
+ADD CONSTRAINT fk_teachers_managers
+FOREIGN KEY (`manager_id`)
+REFERENCES `teachers`(`teacher_id`);
+
+-- online store database
+CREATE TABLE `cities`
+(`city_id` INT(11) PRIMARY KEY AUTO_INCREMENT,
+`name` VARCHAR(50));
+
+CREATE TABLE `customers`
+(`customer_id` INT(11) PRIMARY KEY AUTO_INCREMENT,
+`name` VARCHAR(50),
+`birthday` DATE, 
+`city_id` INT(11));
+
+ALTER TABLE `customers`
+ADD CONSTRAINT fk_cities_customers
+FOREIGN KEY (`city_id`)
+REFERENCES `cities`(`city_id`); 
+
+CREATE TABLE `orders`
+(`order_id` INT(11) PRIMARY KEY AUTO_INCREMENT,
+`customer_id` INT(11),
+CONSTRAINT fk_customers_orders
+FOREIGN KEY (`customer_id`)
+REFERENCES `customers`(`customer_id`));
+
+CREATE TABLE `item_types`
+(`item_type_id` INT(11) PRIMARY KEY AUTO_INCREMENT,
+`name` VARCHAR(50));
+
+CREATE TABLE `items`
+(`item_id` INT(11) PRIMARY KEY AUTO_INCREMENT,
+`name` VARCHAR(50),
+`item_type_id` INT(11),
+CONSTRAINT fk_item_types_items
+FOREIGN KEY (`item_type_id`)
+REFERENCES `item_types`(`item_type_id`));
+
+CREATE TABLE `order_items`
+(`order_id` INT(11),
+`item_id` INT(11),
+CONSTRAINT pk_orders_items
+PRIMARY KEY (`order_id`, `item_id`),
+CONSTRAINT fk_orders_order_items
+FOREIGN KEY (`order_id`)
+REFERENCES `orders`(`order_id`),
+CONSTRAINT fk_items_order_items
+FOREIGN KEY (`item_id`)
+REFERENCES `items`(`item_id`));
+
 SELECT * FROM `students_exams`;
