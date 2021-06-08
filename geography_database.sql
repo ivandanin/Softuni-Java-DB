@@ -800,3 +800,9 @@ INSERT INTO `rivers` (`id`, `river_name`, `length`, `drainage_area`, `average_di
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+
+SELECT `mountain_range`, `peak_name`, `elevation`
+FROM `mountains` AS m
+JOIN `peaks` AS p ON p.`mountain_id` = m.`id`
+WHERE `mountain_range` = 'Rila'
+ORDER BY `elevation` DESC;
