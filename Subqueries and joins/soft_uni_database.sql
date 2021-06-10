@@ -1682,3 +1682,77 @@ USING (`address_id`)
 ORDER BY `address_id`
 LIMIT 5;
 
+-- addresses with towns
+SELECT e.`first_name`, e.`last_name`,t.`name` AS `town`, a.`address_text`
+FROM `employees` AS e
+JOIN `addresses` AS a
+USING (`address_id`)
+JOIN `towns` AS t
+ON a.`town_id` = t.`town_id`
+ORDER BY `first_name`, `last_name`
+LIMIT 5;
+
+-- sales employees
+SELECT e.`employee_id`, e.`first_name`, e.`last_name`, d.`name` AS `department_name`
+FROM `employees` AS e
+JOIN `departments` AS d
+USING (`department_id`)
+WHERE d.`name` = 'Sales'
+ORDER BY `employee_id` DESC;
+
+-- employee departments
+SELECT e.`employee_id`, e.`first_name`, e.`salary`, d.`name` AS `department_name`
+FROM `employees` AS e
+JOIN `departments` AS d
+USING (`department_id`)
+WHERE `salary` > 15000
+ORDER BY `department_id` DESC
+LIMIT 5;
+
+-- employees without project
+SELECT `employee_id`, `first_name`
+FROM `employees`
+WHERE `employee_id`
+NOT IN (SELECT `employee_id` FROM `employees_projects`)
+ORDER BY `employee_id` DESC
+LIMIT 3;
+
+-- employees hired after
+SELECT e.`first_name`, e.`last_name`, e.`hire_date`,  d.`name` AS `dept_name`
+FROM `employees` AS e
+JOIN `departments` AS d
+ON e.`department_id` = d.`department_id`
+WHERE DATE(`hire_date`) > '1999-01-01' AND
+d.`name` IN ('Sales', 'Finance')
+ORDER BY `hire_date`;
+
+-- employees with project
+SELECT e.`employee_id`, e.`first_name`, p.`name` AS `project_name`
+FROM `employees` AS e
+JOIN `employees_projects` AS ep
+ON ep.`employee_id` = e.`employee_id`
+JOIN `projects` AS p
+ON ep.`project_id` = p.`project_id`
+WHERE `start_date` > '2002-08-13'
+AND `end_date` IS NULL
+ORDER BY `first_name`, `project_name`
+LIMIT 5;
+
+-- employee 24
+SELECT e.`employee_id`, e.`first_name`,
+IF(YEAR(p.`start_date`) < 2005, p.`name`, NULL) AS `project_name`
+FROM `employees` AS e
+JOIN `employees_projects` AS ep
+ON ep.`employee_id` = e.`employee_id`
+JOIN `projects` AS p
+ON ep.`project_id` = p.`project_id`
+WHERE e.`employee_id` = 24
+ORDER BY p.`name`;
+
+-- employee manager
+SELECT e.`employee_id`, e.`first_name`, m.`employee_id`, m.`first_name`
+FROM `employees` AS e
+JOIN `employees` AS m
+ON e.`manager_id` = m.`employee_id`
+WHERE e.`manager_id` IN (3, 7)
+ORDER BY e.`first_name`;
