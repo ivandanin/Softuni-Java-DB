@@ -1683,4 +1683,13 @@ ON d.`manager_id` = e.`employee_id`
 ORDER BY e.`employee_id`
 LIMIT 5;
 
+-- towns addresses
+SELECT t.`town_id`, t.`name` AS `town_name`,
+a.`address_text` 
+FROM `towns` AS t
+RIGHT JOIN `addresses` AS a
+ON t.`town_id` = a.`town_id`
+WHERE t.`name` IN ('San Francisco', 'Sofia', 'Carnation')
+ORDER BY `town_id`, `address_id`;
+
 
