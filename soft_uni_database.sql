@@ -1692,4 +1692,12 @@ ON t.`town_id` = a.`town_id`
 WHERE t.`name` IN ('San Francisco', 'Sofia', 'Carnation')
 ORDER BY `town_id`, `address_id`;
 
+-- employees without managers
+SELECT `employee_id`, `first_name`, `last_name`, `department_id`, `salary` 
+FROM `employees`
+WHERE `manager_id` IS NULL;
 
+-- high salary 
+SELECT COUNT(`salary`) AS `count`
+FROM `employees`
+WHERE `salary` > (SELECT AVG(`salary`) FROM `employees`);
