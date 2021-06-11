@@ -800,3 +800,39 @@ INSERT INTO `rivers` (`id`, `river_name`, `length`, `drainage_area`, `average_di
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+
+
+-- highest peaks in bulgaria
+SELECT c.`country_code`, m.`mountain_range`, p.`peak_name`, p.`elevation`
+FROM `countries` AS c
+JOIN `mountains_countries` AS mc
+ON c.`country_code` = mc.`country_code`
+JOIN `mountains` AS m
+ON m.`id` = mc.`mountain_id`
+JOIN `peaks` AS p
+ON m.`id` = p.`mountain_id`
+WHERE p.`elevation` > 2835 
+AND c.`country_code` = 'BG'
+ORDER BY `elevation` DESC;
+
+-- count mountain ranges
+SELECT c.`country_code`, COUNT(m.`mountain_range`) AS `mountain_range`
+FROM `countries` AS c
+JOIN `mountains_countries` AS mc
+USING (`country_code`)
+JOIN `mountains` AS m
+ON m.`id` = mc.`mountain_id`
+WHERE `country_code` IN ('BG', 'US', 'RU')
+GROUP BY `country_code`
+ORDER BY `mountain_range` DESC;
+
+-- countries with rivers
+SELECT c.`country_name`, r.`river_name`
+FROM `countries` AS c
+LEFT JOIN `countries_rivers` AS cr
+USING (`country_code`)
+LEFT JOIN `rivers` AS r
+ON cr.`river_id` = r.`id`
+WHERE `continent_code` = 'AF'
+ORDER BY `country_name`
+LIMIT 5;
