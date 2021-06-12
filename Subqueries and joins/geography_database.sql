@@ -836,3 +836,25 @@ ON cr.`river_id` = r.`id`
 WHERE `continent_code` = 'AF'
 ORDER BY `country_name`
 LIMIT 5;
+
+-- continents and currencies
+SELECT `continent_code`,
+`currency_code`,
+COUNT(`country_name`) AS `currency_usage`
+FROM `countries` AS c
+GROUP BY `continent_code`, `currency_code`
+HAVING `currency_usage` = (
+SELECT COUNT(`country_code`) AS coun
+FROM `countries` AS c1
+WHERE c1.`continent_code` = c.`continent_code`
+GROUP BY `currency_code`
+ORDER BY `coun` DESC
+LIMIT 1) 
+AND `currency_usage` > 1
+ORDER BY `continent_code`, `currency_code`;
+
+-- country without any mountains
+SELECT COUNT(*) AS `country_count`
+FROM `countries` AS c
+WHERE c.`country_code` 
+NOT IN (SELECT `country_code` FROM `mountains_countries`);
