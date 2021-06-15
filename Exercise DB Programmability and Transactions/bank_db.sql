@@ -69,3 +69,38 @@ INSERT INTO `account_holders` (`id`, `first_name`, `last_name`, `ssn`) VALUES
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+
+
+-- find full name
+DELIMITER //
+CREATE PROCEDURE `usp_get_holders_full_name`()
+BEGIN
+	SELECT CONCAT(`first_name`, ' ', `last_name`) AS `full_name`
+    FROM `account_holders`
+    ORDER BY `full_name`, `id`;
+END //
+DELIMITER ;
+
+-- people with balance higher than 
+DELIMITER //
+CREATE PROCEDURE `usp_get_holders_with_balance_higher_than`(`comparative_value` DECIMAL(19, 4))
+BEGIN
+	SELECT `first_name`, `last_name` 
+	FROM `account_holders` AS ah
+	JOIN `accounts` AS a
+	ON a.`account_holder_id` = ah.`id`
+	WHERE `balance` > `comparative_value`
+    GROUP BY ah.`id`
+	ORDER BY ah.`id`;
+END //
+DELIMITER ;
+
+-- future value functions
+DELIMITER //
+CREATE FUNCTION `ufn_calculate_future_value`(`sum` DECIMAL(19, 4), `interest` DOUBLE, `years` INT)
+RETURNS DECIMAL(19, 4)  
+DETERMINISTIC   
+BEGIN 
+	RETURN `sum` * POW(1 + `interest`, `years`);
+END //
+DELIMITER ;
