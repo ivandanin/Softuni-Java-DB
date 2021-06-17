@@ -517,7 +517,7 @@ BEGIN
 	WHERE ss.`name` = `spaceship_name` > 0)
 	THEN UPDATE `spaceships`
 	SET ss.`light_speed_rate` = ss.`light_speed_rate` + `light_speed_rate_increse`
-	WHERE ss.`name` = `spaceship_name`;
+	WHERE `name` = `spaceship_name`;
     ELSE 
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Spaceship you are trying to modify does not exists.';
