@@ -516,7 +516,7 @@ BEGIN
 	FROM `spaceships` AS ss
 	WHERE ss.`name` = `spaceship_name` > 0)
 	THEN UPDATE `spaceships`
-	SET ss.`light_speed_rate` = ss.`light_speed_rate` + `light_speed_rate_increse`
+	SET `light_speed_rate` = `light_speed_rate` + `light_speed_rate_increse`
 	WHERE `name` = `spaceship_name`;
     ELSE 
     SIGNAL SQLSTATE '45000'
